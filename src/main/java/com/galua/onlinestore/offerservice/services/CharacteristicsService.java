@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CharacteristicsService {
     void createCharacteristic(Characteristics characteristic);
-    void updateCharacteristic(Characteristics characteristic);
+    void updateCharacteristic(int id, Characteristics characteristic);
     void deleteCharacteristic(int id);
 
     Characteristics getCharacteristicByID(int id);

@@ -28,8 +28,8 @@ public class CategoriesServiceImpl implements CategoriesService{
             throw new IllegalArgumentException("Категория уже существует");
         }
         else {
-            log.severe("Сохранение категории: " +category);
             categoriesRepository.save(category);
+            log.severe("Сохранение категории: " +category);
         }
     }
 

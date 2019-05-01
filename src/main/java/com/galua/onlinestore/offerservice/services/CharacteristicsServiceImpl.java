@@ -28,15 +28,26 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
             throw new IllegalArgumentException("Характеристика уже существует");
         }
         else {
-            log.severe("Сохранение характеристики: " +characteristic);
             characteristicsRepositoty.save(characteristic);
+            log.severe("Сохранение характеристики: " +characteristic);
         }
     }
 
     @Override
-    public void updateCharacteristic(Characteristics characteristic) {
-        log.severe("Обновление характеристики: "+characteristic);
-        characteristicsRepositoty.save(characteristic);
+    public void updateCharacteristic(int id, Characteristics characteristic) {
+        Characteristics findCharacteristics = getCharacteristicByID(id);
+        findCharacteristics.setName(characteristic.getName());
+
+        List<Characteristics> list = characteristicsRepositoty.findByName(characteristic.getName());
+        if(characteristic.getName().equals(findCharacteristics.getName())) {
+            list.remove(findCharacteristics);
+        }
+        if(list.size()>0){
+            throw new IllegalArgumentException("Характеристика уже существует");
+        }
+        characteristicsRepositoty.save(findCharacteristics);
+
+        log.severe("Обновление характеристики: "+findCharacteristics);
     }
 
     @Override
