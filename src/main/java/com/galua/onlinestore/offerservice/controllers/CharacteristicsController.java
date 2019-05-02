@@ -87,5 +87,9 @@ public class CharacteristicsController {
             log.severe("Характеристика не найдена");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        catch(IllegalArgumentException e){
+            log.severe("Характеристика связана с оффером");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -16,6 +16,9 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
     @Autowired
     private CharacteristicsRepo characteristicsRepositoty;
 
+    @Autowired
+    private OffersService offersService;
+
     @Override
     public void createCharacteristic(Characteristics characteristic) {
         if(characteristic==null){
@@ -37,6 +40,7 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
     public void updateCharacteristic(int id, Characteristics characteristic) {
         Characteristics findCharacteristics = getCharacteristicByID(id);
         findCharacteristics.setName(characteristic.getName());
+        findCharacteristics.setDescription(characteristic.getDescription());
 
         List<Characteristics> list = characteristicsRepositoty.findByName(characteristic.getName());
         if(characteristic.getName().equals(findCharacteristics.getName())) {
@@ -53,7 +57,12 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
     @Override
     public void deleteCharacteristic(int id) {
         log.severe("Удаление характеристики с id="+id);
-        characteristicsRepositoty.delete(getCharacteristicByID(id));
+        if(getCharacteristicByID(id).getOffers().isEmpty()) {
+            characteristicsRepositoty.delete(getCharacteristicByID(id));
+        }
+        else{
+            throw new IllegalArgumentException("Характеристика связана с оффером");
+        }
     }
 
     @Override

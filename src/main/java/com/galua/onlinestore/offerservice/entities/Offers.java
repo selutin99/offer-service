@@ -7,13 +7,14 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@EqualsAndHashCode(exclude = "characteristics")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "characteristics")
 @Entity
 @Table(name="offers")
 public class Offers {
@@ -33,17 +34,20 @@ public class Offers {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Categories category;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,
+                cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+                })
     @JoinTable(name = "characteristics_offers",
                joinColumns = @JoinColumn(name = "characteristics_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "offer_id", referencedColumnName = "id"))
-    private Set<Characteristics> characteristics;
+    private Set<Characteristics> characteristics = new HashSet<>();
 
-    public Offers(String name, float price, int paidTypeID, Categories category, Characteristics... characteristics) {
+    public Offers(String name, float price, int paidTypeID, Characteristics... characteristics) {
         this.name = name;
         this.price = price;
         this.paidTypeID = paidTypeID;
-        this.category = category;
 
         this.characteristics = Stream.of(characteristics).collect(Collectors.toSet());
         this.characteristics.forEach(x -> x.getOffers().add(this));

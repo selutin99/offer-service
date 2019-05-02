@@ -35,19 +35,9 @@ public class OffersServiceImpl implements OffersService{
 
     @Override
     public void updateOffer(int id, Offers offer) {
-        Offers findOffer = getOfferByID(id);
-        findOffer.setName(offer.getName());
-
-        List<Offers> list = offersRepositoty.findByName(offer.getName());
-        if(offer.getName().equals(findOffer.getName())) {
-            list.remove(findOffer);
-        }
-        if(list.size()>0){
-            throw new IllegalArgumentException("Оффер уже существует");
-        }
-        offersRepositoty.save(findOffer);
-
-        log.severe("Обновление оффера: "+findOffer);
+        deleteOffer(id);
+        createOffer(offer);
+        log.severe("Обновление оффера: "+offer);
     }
 
     @Override
