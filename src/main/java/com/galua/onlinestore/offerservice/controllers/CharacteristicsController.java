@@ -61,10 +61,9 @@ public class CharacteristicsController {
     public ResponseEntity<Characteristics> updateCharacteristics(@PathVariable(value = "id") int id,
                                                        @RequestBody Characteristics characteristic) {
         try {
-            characteristicsService.updateCharacteristic(id, characteristic);
+            Characteristics charact = characteristicsService.updateCharacteristic(id, characteristic);
             log.severe("Характеристика обновлена успешно");
-            characteristic.setId(id);
-            return new ResponseEntity<>(characteristic, HttpStatus.OK);
+            return new ResponseEntity<>(charact, HttpStatus.OK);
         }
         catch(NoSuchElementException e){
             log.severe("Передана несуществующая характеристика");

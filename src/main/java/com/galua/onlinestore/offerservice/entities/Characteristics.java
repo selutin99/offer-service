@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(exclude = "offers")
 @Data
@@ -30,7 +30,7 @@ public class Characteristics {
                     CascadeType.MERGE
                 },
                 mappedBy = "characteristics")
-    private Set<Offers> offers = new HashSet<>();
+    private List<Offers> offers = new ArrayList<>();
 
     public Characteristics(String name, String description) {
         this.name = name;

@@ -63,7 +63,6 @@ public class OffersController {
         try {
             offersService.updateOffer(id, offer);
             log.severe("Оффер обновлен успешно");
-            offer.setId(id);
             return new ResponseEntity<>(offer, HttpStatus.OK);
         }
         catch(NoSuchElementException e){

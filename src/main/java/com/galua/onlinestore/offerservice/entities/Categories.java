@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,12 +26,12 @@ public class Categories {
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<Offers> offers;
+    private List<Offers> offers;
 
     public Categories(String name, Offers... offers) {
         this.name = name;
 
-        this.offers = Stream.of(offers).collect(Collectors.toSet());
+        this.offers = Stream.of(offers).collect(Collectors.toList());
         this.offers.forEach(x -> x.setCategory(this));
     }
 }

@@ -37,7 +37,7 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
     }
 
     @Override
-    public void updateCharacteristic(int id, Characteristics characteristic) {
+    public Characteristics updateCharacteristic(int id, Characteristics characteristic) {
         Characteristics findCharacteristics = getCharacteristicByID(id);
         findCharacteristics.setName(characteristic.getName());
         findCharacteristics.setDescription(characteristic.getDescription());
@@ -52,6 +52,7 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
         characteristicsRepositoty.save(findCharacteristics);
 
         log.severe("Обновление характеристики: "+findCharacteristics);
+        return findCharacteristics;
     }
 
     @Override
