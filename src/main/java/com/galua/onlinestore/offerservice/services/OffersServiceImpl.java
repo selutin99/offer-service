@@ -17,7 +17,7 @@ public class OffersServiceImpl implements OffersService{
     private OffersRepo offersRepositoty;
 
     @Override
-    public void createOffer(Offers offer) {
+    public Offers createOffer(Offers offer) {
         if(offer==null){
             log.severe("Был передан пустой оффер");
             throw new IllegalArgumentException("Оффер не передан");
@@ -30,6 +30,7 @@ public class OffersServiceImpl implements OffersService{
         else {
             offersRepositoty.save(offer);
             log.severe("Сохранение оффера: " +offer);
+            return offer;
         }
     }
 

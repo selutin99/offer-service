@@ -40,8 +40,9 @@ public class OffersController {
 
     @PostMapping("offers")
     public ResponseEntity addOffers(@RequestBody Offers offers, UriComponentsBuilder builder) {
+        Offers offer = null;
         try {
-            offersService.createOffer(offers);
+            offer = offersService.createOffer(offers);
         }
         catch(IllegalArgumentException e){
             log.severe("Попытка добавления существующего оффера");
@@ -54,7 +55,7 @@ public class OffersController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/offers/{id}").buildAndExpand(offers.getId()).toUri());
         log.severe("Оффер добавлен успешно");
-        return new ResponseEntity(offers, headers, HttpStatus.CREATED);
+        return new ResponseEntity(offer, headers, HttpStatus.CREATED);
     }
 
     @PutMapping("offers/{id}")

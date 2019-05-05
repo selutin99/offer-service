@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = "offers")
 @Data
+@EqualsAndHashCode(exclude = "offers")
+@ToString(exclude = "offers")
 @NoArgsConstructor
 @Entity
 @Table(name="characteristics")

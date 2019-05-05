@@ -3,6 +3,7 @@ package com.galua.onlinestore.offerservice.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,8 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@EqualsAndHashCode(exclude = "characteristics")
 @Data
+@EqualsAndHashCode(exclude = "characteristics")
+@ToString(exclude = "characteristics")
 @NoArgsConstructor
 @Entity
 @Table(name="offers")
