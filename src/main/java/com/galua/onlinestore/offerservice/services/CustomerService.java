@@ -5,8 +5,7 @@ import com.galua.onlinestore.offerservice.entities.Offers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,12 +23,20 @@ public class CustomerService {
     @Value("${service.customer.url}")
     private String serviceURL;
 
-    public List<Offers> getPaidTypes(int id) {
+    public List<Offers> getPaidTypes(int id, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity entity = new HttpEntity(headers);
+
         ResponseEntity<List<PaidType>> response = myRestTemplate.exchange(
                 serviceURL+"customers/paidtype/"+id,
                 HttpMethod.GET,
-                null,
+                entity,
                 new ParameterizedTypeReference<List<PaidType>>(){});
+        if(response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR)){
+            throw new IllegalArgumentException();
+        }
         List<PaidType> paidTypeList = response.getBody();
         List<Offers> offerses = offersService.getAllOffers();
 

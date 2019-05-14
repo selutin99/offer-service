@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,15 +25,20 @@ public class CustomersController {
     private RestTemplate myRestTemplate;
 
     @GetMapping("/offers/paidtype/{id}")
-    public ResponseEntity<List<Offers>> getPaidTypeOfCustomer(@PathVariable("id") int id) {
+    public ResponseEntity<List<Offers>> getPaidTypeOfCustomer(@PathVariable("id") int id,
+                                                              @RequestHeader("Authorization") String token) {
         try {
-            List<Offers> offersList = customerService.getPaidTypes(id);
+            List<Offers> offersList = customerService.getPaidTypes(id, token);
             log.severe("Типы возвращены успешно");
             return new ResponseEntity<>(offersList, HttpStatus.OK);
         }
         catch(NoSuchElementException e){
             log.severe("Заказчик не найден");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch(Exception e){
+            log.severe("Неверный запрос");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
