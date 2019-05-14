@@ -6,13 +6,12 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Log
@@ -35,6 +34,23 @@ public class CustomersController {
         catch(NoSuchElementException e){
             log.severe("Заказчик не найден");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch(Exception e){
+            log.severe("Неверный запрос");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<Map<Object, Object>> getTokenForOrder() {
+        try {
+            String token = customerService.getToken();
+            Map<Object, Object> response = new HashMap<>();
+            response.put("token", token);
+
+            log.severe("Токен возвращен успешно");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(Exception e){
             log.severe("Неверный запрос");
