@@ -28,7 +28,6 @@ public class Offers {
 
     private float price;
 
-    //TODO: Добавить внешний ключ после подключения модуля
     private int paidTypeID;
 
     @ManyToOne(fetch = FetchType.EAGER)

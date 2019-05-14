@@ -2,6 +2,8 @@ package com.galua.onlinestore.offerservice.controllers;
 
 import com.galua.onlinestore.offerservice.entities.Offers;
 import com.galua.onlinestore.offerservice.services.CustomerService;
+import com.galua.onlinestore.offerservice.services.OffersService;
+import com.galua.onlinestore.offerservice.services.OrderService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,12 @@ import java.util.NoSuchElementException;
 public class CustomersController {
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    OffersService offersService;
+
+    @Autowired
+    OrderService orderService;
 
     @Autowired
     private RestTemplate myRestTemplate;
@@ -41,19 +49,24 @@ public class CustomersController {
         }
     }
 
-    @PostMapping("/token")
-    public ResponseEntity<Map<Object, Object>> getTokenForOrder() {
+    @PostMapping("/ordered/{id}")
+    public ResponseEntity<Map<Object, Object>> makeOrder(@PathVariable int id) {
+        Offers offer = null;
+        String token = customerService.getToken();
         try {
-            String token = customerService.getToken();
-            Map<Object, Object> response = new HashMap<>();
-            response.put("token", token);
+            offer = offersService.getOfferByID(id);
+        }
+        catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Map<Object, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("offer", offer);
 
-            log.severe("Токен возвращен успешно");
-
+        if(orderService.makeOrder(response)) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        catch(Exception e){
-            log.severe("Неверный запрос");
+        else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

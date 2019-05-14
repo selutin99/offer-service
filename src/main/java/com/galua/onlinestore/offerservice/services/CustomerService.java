@@ -37,7 +37,7 @@ public class CustomerService {
         requestDto.setEmail(email);
         requestDto.setPassword(password);
 
-        Map<Object, Object> response = myRestTemplate.postForObject(
+        Map response = myRestTemplate.postForObject(
                 serviceURL+"auth/login", requestDto, Map.class);
         return response.get("token").toString();
     }
