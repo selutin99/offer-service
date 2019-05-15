@@ -26,17 +26,7 @@ public class CustomerService {
     @Value("${service.customer.url}")
     private String serviceURL;
 
-    @Value("${service.customer.email}")
-    private String email;
-
-    @Value("${service.customer.password}")
-    private String password;
-
-    public String getToken(){
-        AuthenticationRequestDto requestDto = new AuthenticationRequestDto();
-        requestDto.setEmail(email);
-        requestDto.setPassword(password);
-
+    public String getToken(AuthenticationRequestDto requestDto){
         Map response = myRestTemplate.postForObject(
                 serviceURL+"auth/login", requestDto, Map.class);
         return response.get("token").toString();

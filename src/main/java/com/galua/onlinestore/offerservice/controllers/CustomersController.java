@@ -1,5 +1,6 @@
 package com.galua.onlinestore.offerservice.controllers;
 
+import com.galua.onlinestore.customerservice.dto.AuthenticationRequestDto;
 import com.galua.onlinestore.offerservice.entities.Offers;
 import com.galua.onlinestore.offerservice.services.CustomerService;
 import com.galua.onlinestore.offerservice.services.OffersService;
@@ -50,9 +51,16 @@ public class CustomersController {
     }
 
     @PostMapping("/ordered/{id}")
-    public ResponseEntity<Map<Object, Object>> makeOrder(@PathVariable int id) {
-        Offers offer = null;
-        String token = customerService.getToken();
+    public ResponseEntity<Map<Object, Object>> makeOrder(@PathVariable int id,
+                                                         @RequestBody AuthenticationRequestDto requestDto) {
+        Offers offer;
+        String token;
+        try {
+            token = customerService.getToken(requestDto);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         try {
             offer = offersService.getOfferByID(id);
         }
