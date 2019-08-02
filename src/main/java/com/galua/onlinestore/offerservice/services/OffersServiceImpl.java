@@ -17,7 +17,7 @@ public class OffersServiceImpl implements OffersService{
     private OffersRepo offersRepositoty;
 
     @Override
-    public void createOffer(Offers offer) {
+    public Offers createOffer(Offers offer) {
         if(offer==null){
             log.severe("Был передан пустой оффер");
             throw new IllegalArgumentException("Оффер не передан");
@@ -28,15 +28,32 @@ public class OffersServiceImpl implements OffersService{
             throw new IllegalArgumentException("Оффер уже существует");
         }
         else {
-            log.severe("Сохранение оффера: " +offer);
             offersRepositoty.save(offer);
+            log.severe("Сохранение оффера: " +offer);
+            return offer;
         }
     }
 
     @Override
-    public void updateOffer(Offers offer) {
-        log.severe("Обновление оффера: "+offer);
-        offersRepositoty.save(offer);
+    public void updateOffer(int id, Offers offer) {
+        Offers findOffer = getOfferByID(id);
+
+        findOffer.setName(offer.getName());
+        findOffer.setPrice(offer.getPrice());
+        findOffer.setPaidTypeID(offer.getPaidTypeID());
+        findOffer.setCategory(offer.getCategory());
+        findOffer.setCharacteristics(offer.getCharacteristics());
+
+        List<Offers> list = offersRepositoty.findByName(offer.getName());
+        if(offer.getName().equals(findOffer.getName())) {
+            list.remove(findOffer);
+        }
+        if(list.size()>0){
+            throw new IllegalArgumentException("Оффер уже существует");
+        }
+        offersRepositoty.save(findOffer);
+
+        log.severe("Обновление Оффера: "+findOffer);
     }
 
     @Override

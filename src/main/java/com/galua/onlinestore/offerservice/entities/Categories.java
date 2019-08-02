@@ -1,12 +1,16 @@
 package com.galua.onlinestore.offerservice.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
+@EqualsAndHashCode(exclude = "offers")
+@ToString(exclude = "offers")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -17,4 +21,15 @@ public class Categories {
     private int id;
 
     private String name;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Offers> offers;
+
+    public Categories(String name, Offers... offers) {
+        this.name = name;
+
+        this.offers = Stream.of(offers).collect(Collectors.toList());
+        this.offers.forEach(x -> x.setCategory(this));
+    }
 }

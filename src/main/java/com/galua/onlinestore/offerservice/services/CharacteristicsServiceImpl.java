@@ -16,6 +16,9 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
     @Autowired
     private CharacteristicsRepo characteristicsRepositoty;
 
+    @Autowired
+    private OffersService offersService;
+
     @Override
     public void createCharacteristic(Characteristics characteristic) {
         if(characteristic==null){
@@ -28,21 +31,39 @@ public class CharacteristicsServiceImpl implements CharacteristicsService{
             throw new IllegalArgumentException("Характеристика уже существует");
         }
         else {
-            log.severe("Сохранение характеристики: " +characteristic);
             characteristicsRepositoty.save(characteristic);
+            log.severe("Сохранение характеристики: " +characteristic);
         }
     }
 
     @Override
-    public void updateCharacteristic(Characteristics characteristic) {
-        log.severe("Обновление характеристики: "+characteristic);
-        characteristicsRepositoty.save(characteristic);
+    public Characteristics updateCharacteristic(int id, Characteristics characteristic) {
+        Characteristics findCharacteristics = getCharacteristicByID(id);
+        findCharacteristics.setName(characteristic.getName());
+        findCharacteristics.setDescription(characteristic.getDescription());
+
+        List<Characteristics> list = characteristicsRepositoty.findByName(characteristic.getName());
+        if(characteristic.getName().equals(findCharacteristics.getName())) {
+            list.remove(findCharacteristics);
+        }
+        if(list.size()>0){
+            throw new IllegalArgumentException("Характеристика уже существует");
+        }
+        characteristicsRepositoty.save(findCharacteristics);
+
+        log.severe("Обновление характеристики: "+findCharacteristics);
+        return findCharacteristics;
     }
 
     @Override
     public void deleteCharacteristic(int id) {
         log.severe("Удаление характеристики с id="+id);
-        characteristicsRepositoty.delete(getCharacteristicByID(id));
+        if(getCharacteristicByID(id).getOffers().isEmpty()) {
+            characteristicsRepositoty.delete(getCharacteristicByID(id));
+        }
+        else{
+            throw new IllegalArgumentException("Характеристика связана с оффером");
+        }
     }
 
     @Override
