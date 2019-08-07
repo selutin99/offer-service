@@ -28,3 +28,5 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+logs/application.log
+src/main/java/META-INF/MANIFEST.MF
